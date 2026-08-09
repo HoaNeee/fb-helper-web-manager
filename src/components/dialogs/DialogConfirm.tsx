@@ -1,43 +1,91 @@
+import type {
+	ComponentRenderFn,
+	DialogTriggerState,
+	HTMLProps,
+} from "@base-ui/react";
 import Button from "../Button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "../ui/dialog";
 
 interface DialogConfirmProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  title?: string;
-  description?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	title?: string;
+	description?: string;
+	onConfirm: () => void;
+	onCancel?: () => void;
+	type?: "trigger" | "state";
+	trigger?:
+		| React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
+		| ComponentRenderFn<HTMLProps, DialogTriggerState>;
+	okText?: string;
+	cancelText?: string;
+	renderOkButton?: React.ReactNode;
+	renderCancelButton?: React.ReactNode;
 }
 
 export default function DialogConfirm({
-  title = "Are you sure?",
-  description = "This action cannot be undone.",
-  onConfirm,
-  onCancel,
-  open,
-  onOpenChange,
+	title = "Are you sure?",
+	description = "This action cannot be undone.",
+	onConfirm,
+	onCancel,
+	open,
+	onOpenChange,
+	type = "state",
+	trigger,
+	okText = "Continue",
+	cancelText = "Cancel",
+	renderOkButton,
+	renderCancelButton,
 }: DialogConfirmProps) {
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
-        <div className="flex w-full items-center justify-end gap-2">
-          <Button variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button onClick={onConfirm}>Continue</Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+	if (!renderOkButton) {
+		renderOkButton = <Button onClick={onConfirm}>{okText}</Button>;
+	}
+
+	if (!renderCancelButton) {
+		renderCancelButton = (
+			<Button variant="secondary" onClick={onCancel}>
+				{cancelText}
+			</Button>
+		);
+	}
+
+	if (type === "trigger") {
+		return (
+			<Dialog open={open} onOpenChange={onOpenChange}>
+				<DialogTrigger render={trigger} />
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>{title}</DialogTitle>
+						<DialogDescription>{description}</DialogDescription>
+					</DialogHeader>
+					<div className="flex w-full items-center justify-end gap-2">
+						<DialogClose render={renderCancelButton as any} />
+						<DialogClose render={renderOkButton as any} />
+					</div>
+				</DialogContent>
+			</Dialog>
+		);
+	}
+	return (
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>{title}</DialogTitle>
+					<DialogDescription>{description}</DialogDescription>
+				</DialogHeader>
+				<div className="flex w-full items-center justify-end gap-2">
+					{renderCancelButton}
+					{renderOkButton}
+				</div>
+			</DialogContent>
+		</Dialog>
+	);
 }

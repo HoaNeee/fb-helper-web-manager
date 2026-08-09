@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 h1,
@@ -13,128 +13,130 @@ h5,
 h6,
 ul,
 p {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 html {
-  height: 100vh;
+	height: 100vh;
 }
 
 /* Light theme */
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f3f4f6;
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --border-color: #e5e7eb;
-  --toggle-bg: #e5e7eb;
-  --toggle-knob: #ffffff;
-  --input-bg: #f9fafb;
-  --input-text: #111827;
-  --text-danger: #ef4444;
-  --text-success: #10b981;
-  --bg-btn-primary: #3b96ff;
-  --text-btn-primary: #ffffff;
-  --bg-tabs-item: #e5e7eb;
-  --bg-tabs-active: #ffffff;
-  --bg-scrollbar: #d1d5db;
-  --bg-dialog: #ffffff;
-  --text-placeholder: #9ca3af;
+	--bg-primary: #ffffff;
+	--bg-secondary: #f3f4f6;
+	--text-primary: #111827;
+	--text-secondary: #4b5563;
+	--border-color: #e5e7eb;
+	--toggle-bg: #e5e7eb;
+	--toggle-knob: #ffffff;
+	--input-bg: #f9fafb;
+	--input-text: #111827;
+	--text-danger: #ef4444;
+	--text-success: #10b981;
+	--bg-btn-primary: #3b96ff;
+	--bg-btn-disabled: #5299fd;
+	--text-btn-primary: #ffffff;
+	--bg-tabs-item: #e5e7eb;
+	--bg-tabs-active: #ffffff;
+	--bg-scrollbar: #d1d5db;
+	--bg-dialog: #ffffff;
+	--text-placeholder: #9ca3af;
 }
 
 /* Dark theme */
 html.dark {
-  --bg-primary: #18181b;
-  --bg-secondary: #27272a;
-  --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --border-color: #3f3f46;
-  --toggle-bg: #52525b;
-  --toggle-knob: #ffffff;
-  --input-bg: #27272a;
-  --input-text: #f4f4f5;
-  --text-danger: #f87171;
-  --text-success: #34d399;
-  --bg-btn-primary: #70a8e9;
-  --text-btn-primary: #ffffff;
-  --bg-tabs-item: #27272a;
-  --bg-tabs-active: #3f3f46;
-  --bg-scrollbar: #52525b;
-  --bg-dialog: #2a2a2a;
-  --text-placeholder: #71717a;
+	--bg-primary: #18181b;
+	--bg-secondary: #27272a;
+	--text-primary: #f4f4f5;
+	--text-secondary: #a1a1aa;
+	--border-color: #3f3f46;
+	--toggle-bg: #52525b;
+	--toggle-knob: #ffffff;
+	--input-bg: #27272a;
+	--input-text: #f4f4f5;
+	--text-danger: #f87171;
+	--text-success: #34d399;
+	--bg-btn-primary: #70a8e9;
+	--bg-btn-disabled: #649ddc76;
+	--text-btn-primary: #ffffff;
+	--bg-tabs-item: #27272a;
+	--bg-tabs-active: #3f3f46;
+	--bg-scrollbar: #52525b;
+	--bg-dialog: #2a2a2a;
+	--text-placeholder: #71717a;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+	margin: 0;
+	padding: 0;
+	font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	height: 100vh;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--bg-primary);
+	color: var(--text-primary);
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
 }
 
 /* Scrollbar */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: var(--bg-scrollbar) transparent;
+	scrollbar-width: thin;
+	scrollbar-color: var(--bg-scrollbar) transparent;
 }
 
 /* Base Elements */
 input,
 textarea,
 select {
-  border: 1px solid var(--border-color);
-  background: var(--input-bg);
-  color: var(--input-text);
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-family: inherit;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-  outline: none;
+	border: 1px solid var(--border-color);
+	background: var(--input-bg);
+	color: var(--input-text);
+	border-radius: 6px;
+	padding: 8px 12px;
+	font-family: inherit;
+	transition:
+		border-color 0.2s,
+		box-shadow 0.2s;
+	outline: none;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--text-placeholder);
+	color: var(--text-placeholder);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--bg-btn-primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+	border-color: var(--bg-btn-primary);
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-  box-shadow: none;
+	cursor: not-allowed;
+	opacity: 0.6;
+	box-shadow: none;
 }
 
 label {
-  color: var(--text-primary);
-  font-weight: 500;
-  font-size: 14px;
+	color: var(--text-primary);
+	font-weight: 500;
+	font-size: 14px;
 }
 
 input[type="file"]::file-selector-button {
-  cursor: pointer;
-  background-color: gray;
-  color: white;
-  border: none;
-  padding: 4px;
-  border-radius: 2px;
-  transition: background-color 0.2s;
-  font-size: 12px;
+	cursor: pointer;
+	background-color: gray;
+	color: white;
+	border: none;
+	padding: 4px;
+	border-radius: 2px;
+	transition: background-color 0.2s;
+	font-size: 12px;
 }
 
 /* .quill {
