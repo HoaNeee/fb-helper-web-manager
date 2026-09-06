@@ -12,7 +12,7 @@ import {
 import { Checkbox } from "../ui/checkbox";
 import { FieldLabel } from "../ui/field";
 import { getDayOfWeekText } from "@/utils/utils";
-import Button from "../Button";
+import { Button } from "../Button";
 import getTextWithLanguage from "@/helpers/language";
 import { useEffect, useRef } from "react";
 

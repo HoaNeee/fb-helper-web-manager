@@ -1,7 +1,7 @@
 import { Switch } from "@/components/ui/switch";
 import { Database, Play, Settings2, Sliders, Square } from "lucide-react";
 import { useEffect, useState } from "react";
-import Button from "../components/Button";
+import { Button } from "../components/Button";
 import type { Device } from "../services/device-service";
 import deviceService from "../services/device-service";
 import Loading from "@/components/Loading";

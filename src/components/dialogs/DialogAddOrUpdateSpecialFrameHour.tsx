@@ -2,7 +2,7 @@ import {
   DEFAULT_LIST_DAY_OF_WEEK,
   type SpecialFrameHour,
 } from "@/services/special-frame-hour-service";
-import Button from "../Button";
+import { Button } from "../Button";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +15,7 @@ import { Input } from "../ui/input";
 import { useEffect, useRef, useState } from "react";
 import DialogChooseDayOfWeek from "./DialogChooseDayOfWeek";
 import { getDayOfWeekText } from "@/utils/utils";
+import { handleExceptionGlobal } from "@/utils/exception";
 
 type Props = {
   open: boolean;
@@ -44,30 +45,43 @@ export default function DialogAddOrUpdateSpecialFrameHour({
     }
   }, [mode]);
 
-  function handleSaveSpecialFrameHour() {
+  async function handleSaveSpecialFrameHour() {
     if (!formRef.current) {
       return;
     }
-    const form = formRef.current;
+    try {
+      const form = formRef.current;
 
-    const formData = new FormData(form);
+      const formData = new FormData(form);
 
-    const data = {
-      start_time: Number(formData.get(`start_time`)),
-      end_time: Number(formData.get(`end_time`)),
-      max_group: Number(formData.get(`max_group`)),
-    };
+      const data = {
+        start_time: Number(formData.get(`start_time`)),
+        end_time: Number(formData.get(`end_time`)),
+        max_group: Number(formData.get(`max_group`)),
+      };
 
-    const payload = {
-      ...specialFrameHour,
-      ...data,
-    };
+      let payload = {
+        ...data,
+      } as Partial<SpecialFrameHour>;
 
-    if (mode === "add") {
-      payload.apply_dates = listDayOfWeek;
+      if (specialFrameHour) {
+        payload = {
+          ...specialFrameHour,
+          ...data,
+        };
+      }
+
+      if (mode === "add") {
+        payload.apply_dates = listDayOfWeek;
+
+        onSave(payload);
+        setListDayOfWeek([...DEFAULT_LIST_DAY_OF_WEEK]);
+      } else {
+        onSave(payload);
+      }
+    } catch (error) {
+      handleExceptionGlobal(error);
     }
-
-    onSave(payload);
   }
 
   if (mode === "edit" && !specialFrameHour) {

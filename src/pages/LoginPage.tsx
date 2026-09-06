@@ -1,5 +1,5 @@
 import AlertComponent from "@/components/AlertComponent";
-import Button from "@/components/Button";
+import { Button } from "@/components/Button";
 import {
   Card,
   CardAction,

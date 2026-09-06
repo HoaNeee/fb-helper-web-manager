@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Moon, Sun, Settings, User } from "lucide-react";
-import Button from "./Button";
+import { Button } from "./Button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import {

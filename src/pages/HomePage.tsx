@@ -1,5 +1,5 @@
 import AlertComponent from "@/components/AlertComponent";
-import Button from "../components/Button";
+import { Button } from "../components/Button";
 import toastHepler from "@/helpers/toast-helper";
 import { Classic } from "@/components/classic";
 

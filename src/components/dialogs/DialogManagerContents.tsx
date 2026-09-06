@@ -8,7 +8,7 @@ import {
 } from "../ui/dialog";
 import ReactQuillNew from "react-quill-new";
 import { X } from "lucide-react";
-import Button from "../Button";
+import { Button } from "../Button";
 import { genID } from "@/utils/utils";
 
 type Props = {
