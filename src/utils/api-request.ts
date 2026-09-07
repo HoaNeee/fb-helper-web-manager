@@ -37,7 +37,10 @@ async function get(params: string): Promise<ApiResponse> {
 	}
 }
 
-async function post(params: string, options?: any): Promise<ApiResponse> {
+async function post(
+	params: string,
+	options?: object | null,
+): Promise<ApiResponse> {
 	try {
 		const header = await getAuthHeader();
 		header["Content-Type"] = "application/json";
@@ -61,7 +64,10 @@ async function post(params: string, options?: any): Promise<ApiResponse> {
 	}
 }
 
-async function patch(params: string, options: any): Promise<ApiResponse> {
+async function patch(
+	params: string,
+	options?: object | null,
+): Promise<ApiResponse> {
 	try {
 		const header = await getAuthHeader();
 		header["Content-Type"] = "application/json";
