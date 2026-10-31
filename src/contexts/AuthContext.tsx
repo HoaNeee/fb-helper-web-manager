@@ -41,8 +41,9 @@ interface AuthContextType {
     username: string,
     email: string,
     password: string,
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   logout: () => void;
+  updateUser: (user: User) => void;
 }
 
 const initialState: AuthState = {
@@ -71,7 +72,6 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
       };
     case "AUTH_FAILURE":
       return {
-        ...state,
         user: null,
         loading: false,
         is_authenticated: false,
@@ -152,7 +152,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     username: string,
     email: string,
     password: string,
-  ): Promise<void> => {
+  ): Promise<boolean> => {
     try {
       dispatch({ type: "AUTH_START" });
       const response = await authService.register({
@@ -160,6 +160,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         email,
         password,
       });
+      return true;
     } catch (error) {
       dispatch({ type: "AUTH_FAILURE" });
       throw error;
@@ -176,6 +177,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     register,
     logout,
+    updateUser: (user) => dispatch({ type: "UPDATE_USER", payload: user }),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

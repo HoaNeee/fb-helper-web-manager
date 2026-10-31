@@ -105,6 +105,17 @@ const specialFrameHourService = {
       throw error;
     }
   },
+
+  async updateCheckedAllDevice(id: number, isActive: boolean) {
+    try {
+      await patch("/special-frame-hours/update-status-all-device/" + id, {
+        is_active: isActive,
+      });
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export {

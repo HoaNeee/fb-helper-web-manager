@@ -21,6 +21,7 @@ const authService = {
       const res = await post("/auth/login", {
         username,
         password,
+        login_location: "WEB",
       });
       return res.data as LoginResponse;
     } catch (error) {
@@ -43,7 +44,7 @@ const authService = {
         email,
         password,
       });
-      console.log(res);
+      return res.data;
     } catch (error) {
       console.log(error);
       throw error;

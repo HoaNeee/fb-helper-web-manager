@@ -1,3 +1,5 @@
+import { useLanguage } from "@/hooks/useLanguage";
+import getTextWithLanguage from "@/helpers/language";
 import { Classic } from "./classic";
 import { Dialog, DialogContent } from "./ui/dialog";
 
@@ -10,10 +12,11 @@ type LoadingProps = {
 
 export default function Loading({
   fullScreen = true,
-  title = "Đang tải...",
+  title = getTextWithLanguage({ en: "Loading...", vi: "Đang tải..." }),
   size = 8,
   type,
 }: LoadingProps) {
+  useLanguage();
   if (type === "dialog") {
     return (
       <Dialog open={true}>

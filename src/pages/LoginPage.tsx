@@ -1,3 +1,5 @@
+import { useLanguage } from "@/hooks/useLanguage";
+import getTextWithLanguage from "@/helpers/language";
 import AlertComponent from "@/components/AlertComponent";
 import { Button } from "@/components/Button";
 import {
@@ -14,8 +16,10 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import type { CustomError } from "@/utils/exception";
 import { useEffect, useRef, useState } from "react";
+import Loading from "@/components/Loading";
 
 export default function LoginPage() {
+  useLanguage();
   const [error, setError] = useState<{ title: string; message: string } | null>(
     null,
   );
@@ -39,7 +43,10 @@ export default function LoginPage() {
       await login(username, password);
     } catch (error) {
       setError({
-        title: "Login failed",
+        title: getTextWithLanguage({
+          en: "Login failed",
+          vi: "Đăng nhập thất bại",
+        }),
         message: (error as CustomError).message,
       });
     }
@@ -47,6 +54,7 @@ export default function LoginPage() {
 
   return (
     <div className="h-screen w-screen flex justify-center items-center">
+      {authState.loading && <Loading type="dialog" />}
       <form
         ref={formRef}
         onSubmit={(e) => {
@@ -57,12 +65,24 @@ export default function LoginPage() {
       >
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>Login to your account</CardTitle>
+            <CardTitle>
+              {getTextWithLanguage({
+                en: "Login to your account",
+                vi: "Đăng nhập vào tài khoản",
+              })}
+            </CardTitle>
             <CardDescription>
-              Enter your username below to login to your account
+              {getTextWithLanguage({
+                en: "Enter your username below to login to your account",
+                vi: "Nhập tên đăng nhập bên dưới để đăng nhập vào tài khoản",
+              })}
             </CardDescription>
             <CardAction>
-              <Button link text="Sign up" to="/register" />
+              <Button
+                link
+                text={getTextWithLanguage({ en: "Sign up", vi: "Đăng ký" })}
+                to="/register"
+              />
             </CardAction>
           </CardHeader>
           <CardContent>
@@ -78,7 +98,12 @@ export default function LoginPage() {
             ) : null}
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">
+                  {getTextWithLanguage({
+                    en: "Username",
+                    vi: "Tên đăng nhập",
+                  })}
+                </Label>
                 <Input
                   id="username"
                   type="text"
@@ -90,12 +115,17 @@ export default function LoginPage() {
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">
+                    {getTextWithLanguage({ en: "Password", vi: "Mật khẩu" })}
+                  </Label>
                   <a
                     href="#"
                     className="ml-auto inline-block text-xs underline-offset-4 hover:underline"
                   >
-                    Forgot your password?
+                    {getTextWithLanguage({
+                      en: "Forgot your password?",
+                      vi: "Quên mật khẩu?",
+                    })}
                   </a>
                 </div>
                 <Input
@@ -112,8 +142,8 @@ export default function LoginPage() {
             <Button
               type="submit"
               className="w-full justify-center text-base"
-              text="Login"
-              onClick={handleLogin}
+              text={getTextWithLanguage({ en: "Login", vi: "Đăng nhập" })}
+              // onClick={handleLogin}
             />
           </CardFooter>
         </Card>

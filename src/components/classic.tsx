@@ -1,8 +1,11 @@
+import { useLanguage } from "@/hooks/useLanguage";
+import getTextWithLanguage from "@/helpers/language";
 import { cn } from "@/lib/utils";
 
 type ClassicProps = Omit<React.ComponentProps<"span">, "children">;
 
 function Classic({ className, ...props }: ClassicProps) {
+  useLanguage();
   return (
     <>
       <style>{`
@@ -38,7 +41,7 @@ function Classic({ className, ...props }: ClassicProps) {
             />
           ))}
         </span>
-        <span className="sr-only">Loading</span>
+        <span className="sr-only">{getTextWithLanguage({ en: "Loading", vi: "Đang tải" })}</span>
       </span>
     </>
   );

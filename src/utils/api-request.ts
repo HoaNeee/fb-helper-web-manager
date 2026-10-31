@@ -1,168 +1,241 @@
-import { KEY_AUTH } from "@/constants/constants";
+import { KEY_AUTH, KEY_PLATFORM } from "@/constants/constants";
 import { CustomError, type ApiResponseCode } from "./exception";
-import { getValueFromStorage } from "./storage";
+import { deleteValueFromStorage, getValueFromStorage } from "./storage";
+import { logAction } from "./utils";
 
 const DOMAIN = "http://localhost:8080";
+// const DOMAIN = "https://api.corehelper.site";
 const BASE_URL = DOMAIN + "/api/v1";
 
 export interface ApiResponse {
-	status: number;
-	data: object;
-	message: string;
-	success: boolean;
-	errors: object;
-	code: ApiResponseCode;
+  status: number;
+  data: object;
+  message: string;
+  success: boolean;
+  errors: object;
+  code: ApiResponseCode;
 }
 
 async function get(params: string): Promise<ApiResponse> {
-	try {
-		const header = await getAuthHeader();
+  try {
+    const header = await getHeader();
 
-		const response = await fetch(BASE_URL + params, {
-			method: "GET",
-			headers: header,
-		});
+    const response = await fetch(BASE_URL + params, {
+      method: "GET",
+      headers: header,
+    });
 
-		const res = await response.json();
+    const res = await response.json();
 
-		console.log("get response for " + params + ":", res);
+    logAction("get response for " + params + ":", res);
 
-		if (!res?.success) {
-			throw new CustomError(res?.code, res?.message);
-		}
+    if (!res?.success) {
+      throw new CustomError(res?.code, res?.message, response.status);
+    }
 
-		return res;
-	} catch (error) {
-		throw error;
-	}
+    return res;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
 }
 
 async function post(
-	params: string,
-	options?: object | null,
+  params: string,
+  options?: object | null,
 ): Promise<ApiResponse> {
-	try {
-		const header = await getAuthHeader();
-		header["Content-Type"] = "application/json";
+  try {
+    const header = await getHeader();
 
-		const response = await fetch(BASE_URL + params, {
-			method: "POST",
-			headers: header,
-			body: JSON.stringify(options),
-		});
+    const response = await fetch(BASE_URL + params, {
+      method: "POST",
+      headers: header,
+      body: JSON.stringify(options),
+    });
 
-		const res = await response.json();
+    if (response.ok && response.status === 204) {
+      const resTemp: Partial<ApiResponse> = {
+        status: 204,
+        success: true,
+        message: "No content",
+        data: null,
+      };
+      logAction("post response for " + params + ": No content", resTemp);
+      return resTemp as ApiResponse;
+    }
 
-		console.log("post response for " + params + ":", res);
+    const res = await response.json();
 
-		if (!res?.success) {
-			throw new CustomError(res?.code, res?.message);
-		}
-		return res;
-	} catch (error) {
-		throw error;
-	}
+    logAction("post response for " + params + ":", res);
+
+    if (!res?.success) {
+      throw new CustomError(res?.code, res?.message, response.status);
+    }
+    return res;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
 }
 
 async function patch(
-	params: string,
-	options?: object | null,
+  params: string,
+  options?: object | null,
 ): Promise<ApiResponse> {
-	try {
-		const header = await getAuthHeader();
-		header["Content-Type"] = "application/json";
+  try {
+    const header = await getHeader();
 
-		const response = await fetch(BASE_URL + params, {
-			method: "PATCH",
-			headers: header,
-			body: JSON.stringify(options),
-		});
+    const response = await fetch(BASE_URL + params, {
+      method: "PATCH",
+      headers: header,
+      body: JSON.stringify(options),
+    });
 
-		const res = await response.json();
+    if (response.ok && response.status === 204) {
+      const resTemp: Partial<ApiResponse> = {
+        status: 204,
+        success: true,
+        message: "No content",
+        data: null,
+      };
+      logAction("patch response for " + params + ": No content", resTemp);
+      return resTemp as ApiResponse;
+    }
 
-		console.log("patch response for " + params + ":", res);
+    const res = await response.json();
 
-		if (!res?.success) {
-			throw new CustomError(res?.code, res?.message);
-		}
-		return res;
-	} catch (error) {
-		throw error;
-	}
+    logAction("patch response for " + params + ":", res);
+
+    if (!res?.success) {
+      throw new CustomError(res?.code, res?.message, response.status);
+    }
+    return res;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
 }
 
 async function del(params: string): Promise<ApiResponse> {
-	try {
-		const header = await getAuthHeader();
-		header["Content-Type"] = "application/json";
+  try {
+    const header = await getHeader();
 
-		const response = await fetch(BASE_URL + params, {
-			method: "DELETE",
-			headers: header,
-		});
+    const response = await fetch(BASE_URL + params, {
+      method: "DELETE",
+      headers: header,
+    });
 
-		const res = await response.json();
+    if (response.ok && response.status === 204) {
+      const resTemp: Partial<ApiResponse> = {
+        status: 204,
+        success: true,
+        message: "No content",
+        data: null,
+      };
+      logAction("delete response for " + params + ": No content", resTemp);
+      return resTemp as ApiResponse;
+    }
 
-		console.log("del response for " + params + ":", res);
+    const res = await response.json();
 
-		if (!res?.success) {
-			throw new CustomError(res?.code, res?.message);
-		}
-		return res;
-	} catch (error) {
-		throw error;
-	}
+    logAction("del response for " + params + ":", res);
+
+    if (!res?.success) {
+      throw new CustomError(res?.code, res?.message, response.status);
+    }
+    return res;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
 }
 
 async function postImage({
-	params,
-	files,
-	isMultiple = false,
+  params,
+  files,
+  isMultiple = false,
 }: {
-	params: string;
-	files: File[];
-	isMultiple: boolean;
+  params: string;
+  files: File[];
+  isMultiple: boolean;
 }): Promise<ApiResponse> {
-	try {
-		const formData = new FormData();
+  try {
+    const formData = new FormData();
 
-		if (isMultiple) {
-			files.forEach((file) => {
-				formData.append("files", file);
-			});
-		} else {
-			formData.append("file", files[0]);
-		}
+    if (isMultiple) {
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+    } else {
+      formData.append("file", files[0]);
+    }
 
-		const header = await getAuthHeader();
+    const header = await getHeader();
 
-		const response = await fetch(BASE_URL + params, {
-			method: "POST",
-			headers: header,
-			body: formData,
-		});
+    const response = await fetch(BASE_URL + params, {
+      method: "POST",
+      headers: header,
+      body: formData,
+    });
 
-		const res = await response.json();
+    if (response.ok && response.status === 204) {
+      return {
+        status: 204,
+        message: "No content",
+        data: null,
+      } as ApiResponse;
+    }
 
-		if (!res?.success) {
-			throw new CustomError(res?.code, res?.message);
-		}
-		return res;
-	} catch (error) {
-		throw error;
-	}
+    const res = await response.json();
+
+    if (!res?.success) {
+      throw new CustomError(res?.code, res?.message, response.status);
+    }
+    return res;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
 }
 
-async function getAuthHeader() {
-	const token = getValueFromStorage(KEY_AUTH.TOKEN);
-	let header = {};
-	if (token) {
-		header = {
-			Authorization: `Bearer ${token}`,
-		};
-	}
+async function getHeader() {
+  const token = getValueFromStorage(KEY_AUTH.TOKEN);
+  const deviceId = "";
+  let header = {
+    "Content-Type": "application/json",
+    "X-Request-Platform": KEY_PLATFORM,
+  };
 
-	return header;
+  if (deviceId) {
+    header["X-Device-Id"] = deviceId;
+  }
+
+  if (token) {
+    header["Authorization"] = `Bearer ${token}`;
+  }
+
+  return header;
+}
+
+async function clearAuth() {
+  deleteValueFromStorage(KEY_AUTH.TOKEN);
+  location.reload();
+}
+
+function handleError(error: CustomError) {
+  if (error.code) {
+    const code = error.code as ApiResponseCode;
+    if (code === "TOKEN_EXPIRED") {
+      clearAuth();
+    }
+  }
+
+  if (error.status) {
+    const status = error.status;
+    if (status === 409) {
+      error.code = "CONFLICT";
+    }
+  }
 }
 
 export { get, post, patch, del, postImage };

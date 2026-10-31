@@ -1,15 +1,15 @@
+import CommentAfterPostPage from "@/pages/CommentPostPage";
+import CommentWalkPage from "@/pages/CommentWalkPage";
+import InteractBeforePostPage from "@/pages/InteractBeforePostPage";
+import RegisterPage from "@/pages/RegisterPage";
+import SpecialFrameHourPage from "@/pages/SpecialFrameHourPage";
 import { createBrowserRouter } from "react-router";
-import LoginPage from "../pages/LoginPage";
-import HomePage from "../pages/HomePage";
 import LayoutDefault from "../layouts/LayoutDefault";
 import DataGroupPostPage from "../pages/DataGroupPostPage";
 import DevicePage from "../pages/DevicePage";
+import HomePage from "../pages/HomePage";
+import LoginPage from "../pages/LoginPage";
 import UserSettingPage from "../pages/UserSettingPage";
-import DeviceSettingPage from "../pages/DeviceSettingPage";
-import SpecialFrameHourPage from "@/pages/SpecialFrameHourPage";
-import CommentAfterPostPage from "@/pages/CommentPostPage";
-import InteractBeforePostPage from "@/pages/InteractBeforePostPage";
-import RegisterPage from "@/pages/RegisterPage";
 
 const router = createBrowserRouter([
   {
@@ -45,9 +45,13 @@ const router = createBrowserRouter([
           },
           {
             path: ":deviceId",
-            element: <DeviceSettingPage />,
+            element: <div></div>,
           },
         ],
+      },
+      {
+        path: "comment-walk",
+        element: <CommentWalkPage />,
       },
       {
         path: "interact-before-post",

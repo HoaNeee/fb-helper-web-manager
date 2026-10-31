@@ -1,9 +1,30 @@
 const KEY_LANGUAGE = "language";
 
 const KEY_AUTH = {
-	TOKEN: "auth_token",
+  TOKEN: "auth_token",
+};
+
+const KEY_IMPORT_EXPORT_TYPE = {
+  COMMENT_WALK: "COMMENT_WALK",
+  DATA_GROUP_POST: "DATA_GROUP_POST",
+  KEY_FIELD_OBJECT_TYPE: "data_object_type",
 };
 
 const MAX_LENGTH_FILE_NAME = 15;
 
-export { KEY_LANGUAGE, KEY_AUTH, MAX_LENGTH_FILE_NAME };
+const Z_INDEX = {
+  DIALOG: 999,
+  TOAST: 9999,
+  DIALOG_OVERLAY: 1000,
+};
+
+const KEY_PLATFORM = "WEB";
+
+export {
+  KEY_LANGUAGE,
+  KEY_AUTH,
+  MAX_LENGTH_FILE_NAME,
+  KEY_IMPORT_EXPORT_TYPE,
+  Z_INDEX,
+  KEY_PLATFORM,
+};

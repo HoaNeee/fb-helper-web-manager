@@ -44,28 +44,28 @@ function Button({
   ref,
 }: ButtonProps) {
   const sizeClass = {
-    xs: "text-xs px-1.5 py-1",
-    sm: "text-xs px-2 py-1.5",
-    md: "text-xs px-2.5 py-2",
-    lg: "text-sm px-3 py-2.5",
+    xs: "text-xs px-2 py-1 font-medium",
+    sm: "text-xs px-3 py-1.5 font-medium",
+    md: "text-sm px-3.5 py-1.5 font-medium",
+    lg: "text-sm px-4 py-2 font-medium",
   };
   const variantClass = {
     primary: outline
-      ? `text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30 border border-blue-200`
-      : `bg-(--bg-btn-primary) text-white hover:bg-(--bg-btn-primary)/70 dark:hover:bg-(--bg-btn-primary)/70`,
+      ? `text-(--bg-btn-primary) hover:bg-blue-50 dark:hover:bg-blue-950/30 border border-(--bg-btn-primary)/50`
+      : `bg-(--bg-btn-primary) text-white hover:opacity-85`,
     secondary: outline
-      ? `text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-950/30`
-      : `bg-slate-500 text-white hover:bg-slate-600 dark:hover:bg-slate-950/30`,
+      ? `text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-600`
+      : `bg-slate-500 text-white hover:bg-slate-600`,
     success: outline
-      ? `text-green-500 hover:bg-green-50 dark:hover:bg-green-950/30`
-      : `bg-green-500 text-white hover:bg-green-600 dark:hover:bg-green-950/30`,
+      ? `text-green-600 hover:bg-green-50 dark:hover:bg-green-950/30 border border-green-300`
+      : `bg-green-500 text-white hover:bg-green-600`,
     danger: outline
-      ? `text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 border border-red-100 dark:border-red-900/30`
-      : `bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-950/30 border border-red-100 dark:border-red-900/30`,
+      ? `text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 border border-red-300 dark:border-red-800`
+      : `bg-red-500 text-white hover:bg-red-600`,
     warning: outline
-      ? `text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-950/30 border border-yellow-100 dark:border-yellow-900/30`
-      : `bg-yellow-500 text-white hover:bg-yellow-600 dark:hover:bg-yellow-950/30 border border-yellow-100 dark:border-yellow-900/30`,
-    outline: `text-neutral-700 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-700`,
+      ? `text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-950/30 border border-yellow-300`
+      : `bg-yellow-500 text-white hover:bg-yellow-600`,
+    outline: `text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700`,
   };
 
   if (asChild) {
@@ -97,7 +97,7 @@ function Button({
   return (
     <button
       className={cn(
-        `${sizeClass[size]} ${variantClass[variant]} disabled:bg-(--bg-btn-disabled) cursor-pointer rounded-md transition-colors flex items-center gap-1`,
+        `${sizeClass[size]} ${variantClass[variant]} disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded-lg transition-all flex items-center gap-1.5`,
         className,
       )}
       ref={ref}

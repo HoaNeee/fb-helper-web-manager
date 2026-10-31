@@ -1,3 +1,5 @@
+import { useLanguage } from "@/hooks/useLanguage";
+import getTextWithLanguage from "@/helpers/language";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -7,12 +9,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { type Device } from "@/services/device-service";
 import { Button, ButtonConfirm } from "../Button";
 import { handleExceptionGlobal } from "@/utils/exception";
 import deviceService from "@/services/device-service";
 import { useParams } from "react-router";
 import Loading from "../Loading";
+import type { Device } from "@/types/types";
 
 type Props = {
   open: boolean;
@@ -25,6 +27,7 @@ export default function DialogSyncDevieSetting({
   onOpenChange,
   onSyncDevice,
 }: Props) {
+  useLanguage();
   const [listDevice, setListDevice] = useState<Device[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -39,7 +42,13 @@ export default function DialogSyncDevieSetting({
         const data = res.filter((d) => d.id !== deviceId);
         setListDevice(data);
       } catch (error) {
-        handleExceptionGlobal(error);
+        handleExceptionGlobal(
+          error,
+          getTextWithLanguage({
+            en: "Failed to fetch list device",
+            vi: "Lỗi khi lấy danh sách thiết bị",
+          }),
+        );
       } finally {
         setLoading(false);
       }
@@ -57,7 +66,12 @@ export default function DialogSyncDevieSetting({
         }
       >
         <DialogHeader>
-          <DialogTitle>List device of user</DialogTitle>
+          <DialogTitle>
+            {getTextWithLanguage({
+              en: "List device of user",
+              vi: "Danh sách thiết bị của người dùng",
+            })}
+          </DialogTitle>
         </DialogHeader>
         <div className="flex-1 w-full overflow-y-auto h-full flex flex-col gap-4">
           {loading ? (
@@ -74,8 +88,11 @@ export default function DialogSyncDevieSetting({
                     <p className="text-xs">{d.device_type}</p>
                   </div>
                   <ButtonConfirm
-                    title="Sync"
-                    titleConfirm="Confirm Sync"
+                    title={getTextWithLanguage({ en: "Sync", vi: "Đồng bộ" })}
+                    titleConfirm={getTextWithLanguage({
+                      en: "Confirm Sync",
+                      vi: "Xác nhận đồng bộ",
+                    })}
                     onConfirm={() => {
                       onSyncDevice(d.id);
                     }}
@@ -85,12 +102,25 @@ export default function DialogSyncDevieSetting({
             })
           ) : (
             <div className="flex items-center justify-center h-full w-full">
-              Không có thiết bị nào
+              {getTextWithLanguage({
+                en: "No devices",
+                vi: "Không có thiết bị nào",
+              })}
             </div>
           )}
         </div>
         <DialogFooter>
-          <DialogClose render={<Button text="Cancel" variant="secondary" />} />
+          <DialogClose
+            render={
+              <Button
+                text={getTextWithLanguage({
+                  en: "Cancel",
+                  vi: "Hủy",
+                })}
+                variant="secondary"
+              />
+            }
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

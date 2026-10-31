@@ -1,3 +1,5 @@
+import { useLanguage } from "@/hooks/useLanguage";
+import getTextWithLanguage from "@/helpers/language";
 import {
   DEFAULT_LIST_DAY_OF_WEEK,
   type SpecialFrameHour,
@@ -34,16 +36,19 @@ export default function DialogAddOrUpdateSpecialFrameHour({
   mode,
   specialFrameHour,
 }: Props) {
+  useLanguage();
   const [openDialogChooseDay, setOpenDialogChooseDay] = useState(false);
-  const [listDayOfWeek, setListDayOfWeek] = useState<number[]>([]);
+  const [listDayOfWeek, setListDayOfWeek] = useState<number[]>([
+    ...DEFAULT_LIST_DAY_OF_WEEK,
+  ]);
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (mode === "add") {
-      setListDayOfWeek([...DEFAULT_LIST_DAY_OF_WEEK]);
-    }
-  }, [mode]);
+  // useEffect(() => {
+  //   if (mode === "add") {
+  //     setListDayOfWeek([...DEFAULT_LIST_DAY_OF_WEEK]);
+  //   }
+  // }, [mode]);
 
   async function handleSaveSpecialFrameHour() {
     if (!formRef.current) {
@@ -80,7 +85,13 @@ export default function DialogAddOrUpdateSpecialFrameHour({
         onSave(payload);
       }
     } catch (error) {
-      handleExceptionGlobal(error);
+      handleExceptionGlobal(
+        error,
+        getTextWithLanguage({
+          en: "Unable to save data. Please try again!",
+          vi: "Không thể lưu dữ liệu. Vui lòng thử lại!",
+        }),
+      );
     }
   }
 
@@ -93,13 +104,18 @@ export default function DialogAddOrUpdateSpecialFrameHour({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add or update</DialogTitle>
+            <DialogTitle>
+              {getTextWithLanguage({
+                en: "Add or update",
+                vi: "Thêm hoặc cập nhật",
+              })}
+            </DialogTitle>
           </DialogHeader>
           <div className="">
             <form ref={formRef} className="flex flex-col gap-4 py-4 px-6">
               <Field>
                 <FieldLabel htmlFor={`${mode}-start-time`}>
-                  Start time
+                  {getTextWithLanguage({ en: "Start time", vi: "Giờ bắt đầu" })}
                 </FieldLabel>
                 <Input
                   type="number"
@@ -107,16 +123,27 @@ export default function DialogAddOrUpdateSpecialFrameHour({
                   defaultValue={
                     mode === "edit" ? specialFrameHour?.start_time : undefined
                   }
-                  placeholder="Ex: 1,2,3..."
+                  placeholder={getTextWithLanguage({
+                    en: "Ex: 1,2,3...",
+                    vi: "VD: 1,2,3...",
+                  })}
                   name="start_time"
                 />
               </Field>
               <Field>
-                <FieldLabel htmlFor={`${mode}-end-time`}>End time</FieldLabel>
+                <FieldLabel htmlFor={`${mode}-end-time`}>
+                  {getTextWithLanguage({
+                    en: "End time",
+                    vi: "Giờ kết thúc",
+                  })}
+                </FieldLabel>
                 <Input
                   type="number"
                   id={`${mode}-end-time`}
-                  placeholder="Ex: 2,3,4..."
+                  placeholder={getTextWithLanguage({
+                    en: "Ex: 2,3,4...",
+                    vi: "VD: 2,3,4...",
+                  })}
                   defaultValue={
                     mode === "edit" ? specialFrameHour?.end_time : undefined
                   }
@@ -124,11 +151,19 @@ export default function DialogAddOrUpdateSpecialFrameHour({
                 />
               </Field>
               <Field>
-                <FieldLabel htmlFor={`${mode}-max-group`}>Max group</FieldLabel>
+                <FieldLabel htmlFor={`${mode}-max-group`}>
+                  {getTextWithLanguage({
+                    en: "Max group",
+                    vi: "Số nhóm tối đa",
+                  })}
+                </FieldLabel>
                 <Input
                   type="number"
                   id={`${mode}-max-group`}
-                  placeholder="Ex: 10,20,30..."
+                  placeholder={getTextWithLanguage({
+                    en: "Ex: 10,20,30...",
+                    vi: "VD: 10,20,30...",
+                  })}
                   defaultValue={
                     mode === "edit" ? specialFrameHour?.max_group : undefined
                   }
@@ -138,10 +173,18 @@ export default function DialogAddOrUpdateSpecialFrameHour({
 
               {mode === "add" ? (
                 <div className="flex flex-col gap-2">
-                  <p>Day of week</p>
-                  <div className="border min-h-14 rounded-md bg-muted/20 p-2 text-xs">
+                  <p>
+                    {getTextWithLanguage({
+                      en: "Day of week",
+                      vi: "Ngày trong tuần",
+                    })}
+                  </p>
+                  <div className="border min-h-14 border-gray-300 rounded-md bg-muted/20 p-2 text-xs">
                     {listDayOfWeek.length === 0
-                      ? "No day of week selected"
+                      ? getTextWithLanguage({
+                          en: "No day of week selected",
+                          vi: "Chưa chọn ngày trong tuần",
+                        })
                       : listDayOfWeek
                           .map((day) => getDayOfWeekText({ day }))
                           .join(", ")}
@@ -149,7 +192,10 @@ export default function DialogAddOrUpdateSpecialFrameHour({
                   <div>
                     <Button
                       size="sm"
-                      text="Change day of week"
+                      text={getTextWithLanguage({
+                        en: "Change day of week",
+                        vi: "Đổi ngày trong tuần",
+                      })}
                       className="rounded-sm"
                       onClick={() => setOpenDialogChooseDay(true)}
                     />
@@ -159,9 +205,16 @@ export default function DialogAddOrUpdateSpecialFrameHour({
             </form>
           </div>
           <DialogFooter>
-            <Button text="Cancel" variant="secondary" onClick={onClose} />
             <Button
-              text="Save"
+              text={getTextWithLanguage({
+                en: "Cancel",
+                vi: "Hủy",
+              })}
+              variant="secondary"
+              onClick={onClose}
+            />
+            <Button
+              text={getTextWithLanguage({ en: "Save", vi: "Lưu" })}
               variant="primary"
               onClick={handleSaveSpecialFrameHour}
             />

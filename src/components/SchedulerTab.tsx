@@ -1,8 +1,27 @@
+import getTextWithLanguage from "@/helpers/language";
+import {
+  createSchedulerDailyHours,
+  getScheduerWithType,
+  getSchedulerTypeText,
+  SCHEDULER_TYPE_LIST,
+} from "@/helpers/scheduler";
+import { useLanguage } from "@/hooks/useLanguage";
 import {
   schedulerService,
   type SchedulerDetail,
   type SchedulerTime,
+  type SchedulerType,
 } from "@/services/scheduler-service";
+import { handleExceptionGlobal } from "@/utils/exception";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { Button } from "./Button";
+import Loading from "./Loading";
+import { Dialog, DialogContent } from "./ui/dialog";
+import { Field, FieldLabel } from "./ui/field";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import {
   Select,
   SelectContent,
@@ -10,23 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useEffect, useRef, useState } from "react";
-import { type SchedulerType } from "@/services/scheduler-service";
-import { Field, FieldLabel } from "./ui/field";
-import { Input } from "./ui/input";
-import { Button } from "./Button";
-import { Label } from "./ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { X } from "lucide-react";
-import { useParams } from "react-router";
-import {
-  createSchedulerDailyHours,
-  getScheduerWithType,
-  getSchedulerTypeText,
-  SCHEDULER_TYPE_LIST,
-} from "@/helpers/scheduler";
-import { handleExceptionGlobal } from "@/utils/exception";
-import Loading from "./Loading";
+import toastHepler from "@/helpers/toast-helper";
 
 function DialogSchedulerTimeList({
   list,
@@ -43,6 +46,7 @@ function DialogSchedulerTimeList({
   schedulerTimeValue?: number;
   deviceId: string;
 }) {
+  useLanguage();
   const [listTime, setListTime] = useState<SchedulerTime[]>(list || []);
 
   useEffect(() => {
@@ -66,22 +70,44 @@ function DialogSchedulerTimeList({
 
       await schedulerService.updateSchedulerDetail(deviceId, payload);
       setListTime(newSchedulerTimeList);
+      toastHepler({
+        message: getTextWithLanguage({
+          en: "Delete time successfully",
+          vi: "Xóa giờ chạy thành công",
+        }),
+        type: "success",
+      });
     } catch (error) {
-      handleExceptionGlobal(error);
+      handleExceptionGlobal(
+        error,
+        getTextWithLanguage({
+          en: "Failed to delete time",
+          vi: "Lỗi khi xóa giờ chạy",
+        }),
+      );
     }
   }
 
   const textEmpty =
     schedulerType === "EVERY_MINUTES" || schedulerType === "EVERY_HOURS"
-      ? "This scheduler not have list time"
-      : "No scheduler time list";
+      ? getTextWithLanguage({
+          en: "This schedule does not use a time list",
+          vi: "Loại lịch này không có danh sách giờ chạy",
+        })
+      : getTextWithLanguage({
+          en: "No scheduler time list",
+          vi: "Chưa có giờ chạy trong lịch",
+        });
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={"h-100"}>
         <div className="flex flex-col gap-2 h-full pt-2 overflow-hidden">
           <h3 className="text-lg font-medium text-center">
-            Scheduler time list
+            {getTextWithLanguage({
+              en: "Scheduler time list",
+              vi: "Danh sách giờ chạy",
+            })}
           </h3>
           <div className="flex flex-col gap-2 flex-1 overflow-y-auto items-center">
             {listTime.length > 0 ? (
@@ -111,11 +137,10 @@ function DialogSchedulerTimeList({
 }
 
 export default function SchedulerTab() {
+  useLanguage();
   const [openDialogViewScheduler, setOpenDialogViewScheduler] = useState(false);
   const [schedulerType, setSchedulerType] =
     useState<SchedulerType>("DAILY_HOURS");
-  const [schedulerDetail, setSchedulerDetail] =
-    useState<Partial<SchedulerDetail>>();
   const [inputValue, setInputValue] = useState<number>(0);
   const [schedulerTimeList, setSchedulerTimeList] = useState<SchedulerTime[]>(
     [],
@@ -134,42 +159,41 @@ export default function SchedulerTab() {
       try {
         setLoading(true);
         const res = await schedulerService.getSchedulerByDevice(deviceId);
-        setSchedulerType(res.scheduler_type);
+        const type = res.scheduler_type;
+        setSchedulerType(type);
+
         let details = (await schedulerService.getSchedulerDetail(
-          res.scheduler_type,
+          type,
           deviceId,
         )) as Partial<SchedulerDetail>;
-        if (!details) {
-          if (res.scheduler_type === "DAILY_HOURS") {
-            details = {
-              scheduler_time_list: createSchedulerDailyHours(),
-            };
-          }
+
+        if (!details && type === "DAILY_HOURS") {
+          details = { scheduler_time_list: createSchedulerDailyHours() };
         }
-        setSchedulerDetail(details);
+
+        // sync derived state ngay sau khi fetch
+        if (details?.scheduler_time_value) {
+          setInputValue(details.scheduler_time_value);
+        }
+        if (details?.scheduler_time_list) {
+          setSchedulerTimeList(details.scheduler_time_list);
+        } else if (type === "DAILY_HOURS") {
+          setSchedulerTimeList(createSchedulerDailyHours());
+        }
       } catch (error) {
-        console.log(error);
+        handleExceptionGlobal(
+          error,
+          getTextWithLanguage({
+            en: "Failed to fetch scheduler",
+            vi: "Lỗi khi tải lịch chạy",
+          }),
+        );
       } finally {
         setLoading(false);
       }
     }
     fn();
-  }, []);
-
-  useEffect(() => {
-    if (schedulerDetail) {
-      if (schedulerDetail.scheduler_time_value) {
-        setInputValue(schedulerDetail.scheduler_time_value);
-      }
-      if (schedulerDetail.scheduler_time_list) {
-        setSchedulerTimeList(schedulerDetail.scheduler_time_list);
-      } else {
-        if (schedulerType === "DAILY_HOURS") {
-          setSchedulerTimeList(createSchedulerDailyHours());
-        }
-      }
-    }
-  }, [schedulerDetail]);
+  }, [deviceId]);
 
   function renderSchedulerDetail() {
     if (schedulerType !== "DAILY_HOURS" && schedulerType !== "FRAME_HOURS") {
@@ -177,11 +201,17 @@ export default function SchedulerTab() {
         <div className="mt-4 ml-6">
           <Field>
             <FieldLabel className="font-normal" htmlFor="time-value">
-              Enter time value for{" "}
+              {getTextWithLanguage({
+                en: "Enter time value for",
+                vi: "Nhập thời gian cho",
+              })}{" "}
               {getSchedulerTypeText(schedulerType).toLowerCase()}
             </FieldLabel>
             <Input
-              placeholder="Ex: 1,2,3"
+              placeholder={getTextWithLanguage({
+                en: "Ex: 1,2,3",
+                vi: "VD: 1,2,3",
+              })}
               id="time-value"
               value={inputValue}
               onChange={(e) => setInputValue(Number(e.target.value))}
@@ -190,7 +220,7 @@ export default function SchedulerTab() {
           </Field>
           <div className="flex justify-end mt-3">
             <Button
-              text="Save"
+              text={getTextWithLanguage({ en: "Save", vi: "Lưu" })}
               className="rounded-sm"
               onClick={saveSchedulerDetail}
             />
@@ -198,10 +228,17 @@ export default function SchedulerTab() {
         </div>
       );
     }
+
     if (schedulerType === "DAILY_HOURS") {
       return (
         <div className="mt-4 ml-6 flex justify-end">
-          <Button text="Reset Daily Hours" onClick={resetDailyHour} />
+          <Button
+            text={getTextWithLanguage({
+              en: "Reset Daily Hours",
+              vi: "Đặt lại giờ chạy hằng ngày",
+            })}
+            onClick={resetDailyHour}
+          />
         </div>
       );
     }
@@ -216,10 +253,17 @@ export default function SchedulerTab() {
       );
       setSchedulerType(type as SchedulerType);
       if (details) {
-        setSchedulerDetail(details);
+        setSchedulerTimeList(details.scheduler_time_list);
+        setInputValue(details.scheduler_time_value);
       }
     } catch (error) {
-      handleExceptionGlobal(error);
+      handleExceptionGlobal(
+        error,
+        getTextWithLanguage({
+          en: "Failed to change scheduler type",
+          vi: "Lỗi khi thay đổi loại lịch chạy",
+        }),
+      );
     }
   }
 
@@ -233,10 +277,23 @@ export default function SchedulerTab() {
         scheduler_time_value: inputValue,
       });
       if (res) {
+        toastHepler({
+          message: getTextWithLanguage({
+            en: "Save scheduler successfully",
+            vi: "Lưu lịch chạy thành công",
+          }),
+          type: "success",
+        });
         setSchedulerTimeList(newScheduler);
       }
     } catch (error) {
-      handleExceptionGlobal(error);
+      handleExceptionGlobal(
+        error,
+        getTextWithLanguage({
+          en: "Failed to save scheduler",
+          vi: "Lỗi khi lưu lịch chạy",
+        }),
+      );
     } finally {
       setActionLoading(false);
     }
@@ -252,10 +309,23 @@ export default function SchedulerTab() {
         scheduler_time_list: newScheduler,
       });
       if (res) {
+        toastHepler({
+          message: getTextWithLanguage({
+            en: "Reset scheduler successfully",
+            vi: "Reset lịch chạy thành công",
+          }),
+          type: "success",
+        });
         setSchedulerTimeList(newScheduler);
       }
     } catch (error) {
-      handleExceptionGlobal(error);
+      handleExceptionGlobal(
+        error,
+        getTextWithLanguage({
+          en: "Failed to reset scheduler",
+          vi: "Lỗi khi reset lịch chạy",
+        }),
+      );
     } finally {
       setActionLoading(false);
     }
@@ -269,19 +339,37 @@ export default function SchedulerTab() {
     <>
       {actionLoading && <Loading type="dialog" />}
       <div className="w-full h-full p-4 flex flex-col gap-3">
-        <h2 className="font-medium text-lg">Scheduler for device</h2>
+        <h2 className="font-medium text-lg">
+          {getTextWithLanguage({
+            en: "Scheduler for device",
+            vi: "Lịch chạy của thiết bị",
+          })}
+        </h2>
         <div>
           <Button
-            text="View Scheduler list"
+            text={getTextWithLanguage({
+              en: "View Scheduler list",
+              vi: "Xem danh sách giờ chạy",
+            })}
             size="md"
             onClick={() => setOpenDialogViewScheduler(true)}
           />
         </div>
         <div className="w-[320px]">
-          <Label className="font-normal my-2">Select scheduler type</Label>
+          <Label className="font-normal my-2">
+            {getTextWithLanguage({
+              en: "Select scheduler type",
+              vi: "Chọn loại lịch chạy",
+            })}
+          </Label>
           <Select value={schedulerType} onValueChange={handleChangeType}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select scheduler type">
+              <SelectValue
+                placeholder={getTextWithLanguage({
+                  en: "Select scheduler type",
+                  vi: "Chọn loại lịch chạy",
+                })}
+              >
                 {getSchedulerTypeText(schedulerType)}
               </SelectValue>
             </SelectTrigger>

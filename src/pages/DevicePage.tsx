@@ -1,47 +1,34 @@
+import { useLanguage } from "@/hooks/useLanguage";
+import getTextWithLanguage from "@/helpers/language";
 import { Switch } from "@/components/ui/switch";
 import { Database, Play, Settings2, Sliders, Square } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../components/Button";
-import type { Device } from "../services/device-service";
 import deviceService from "../services/device-service";
 import Loading from "@/components/Loading";
-
-const INITIAL_DEVICES: Device[] = [
-  {
-    id: "dev-01",
-    device_name: "Chrome Profile #01 (Main)",
-    status: "RUNNING",
-    created_at: new Date().toISOString(),
-    device_type: "Chrome",
-  },
-  {
-    id: "dev-02",
-    device_name: "Chrome Profile #02 (Sub)",
-    status: "SPAMMED",
-    created_at: new Date().toISOString(),
-    device_type: "Chrome",
-  },
-  {
-    id: "dev-03",
-    device_name: "Chrome Profile #03 (Sub)",
-    status: "RUNNING",
-    created_at: new Date().toISOString(),
-    device_type: "Chrome",
-  },
-];
+import type { Device, DeviceSetting } from "@/types/types";
+import { handleExceptionGlobal } from "@/utils/exception";
+import toastHepler from "@/helpers/toast-helper";
 
 export default function DevicePage() {
-  const [devices, setDevices] = useState<Device[]>(INITIAL_DEVICES);
+  useLanguage();
+  const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function fn() {
       try {
         setLoading(true);
-        const devices = await deviceService.getAllDeviceByUser();
-        setDevices(devices);
+        const data = await deviceService.getAllDeviceByUser();
+        setDevices(data);
       } catch (error) {
-        throw error;
+        handleExceptionGlobal(
+          error,
+          getTextWithLanguage({
+            en: "Failed to load devices",
+            vi: "Lỗi tải danh sách thiết bị",
+          }),
+        );
       } finally {
         setLoading(false);
       }
@@ -53,6 +40,106 @@ export default function DevicePage() {
     return <Loading />;
   }
 
+  const handleStopAutomation = async (
+    device_id: string,
+    is_stop_task: boolean,
+  ) => {
+    try {
+      await deviceService.updateDeviceSetting({
+        key: "is_stop_task",
+        value: is_stop_task,
+        device_id,
+      });
+      setDevices((prev) =>
+        prev.map((dev) =>
+          dev.id === device_id
+            ? {
+                ...dev,
+                device_setting: {
+                  ...dev.device_setting,
+                  is_stop_task,
+                },
+              }
+            : dev,
+        ),
+      );
+      toastHepler({
+        message: getTextWithLanguage({
+          en: "Device updated successfully",
+          vi: "Cập nhật thiết bị thành công",
+        }),
+        type: "success",
+      });
+    } catch (error) {
+      handleExceptionGlobal(
+        error,
+        getTextWithLanguage({
+          en: "Failed to update device setting",
+          vi: "Lỗi cập nhật thiết bị",
+        }),
+      );
+    }
+  };
+
+  const handleScheduler = async (device_id: string, is_scheduler: boolean) => {
+    try {
+      await deviceService.updateDeviceSetting({
+        key: "is_scheduler",
+        value: is_scheduler,
+        device_id,
+      });
+      setDevices((prev) =>
+        prev.map((dev) =>
+          dev.id === device_id
+            ? {
+                ...dev,
+                device_setting: {
+                  ...dev.device_setting,
+                  is_scheduler,
+                },
+              }
+            : dev,
+        ),
+      );
+    } catch (error) {
+      handleExceptionGlobal(
+        error,
+        getTextWithLanguage({
+          en: "Failed to update device setting",
+          vi: "Lỗi cập nhật thiết bị",
+        }),
+      );
+    }
+  };
+
+  function getLabelByStatusDevice(setting: DeviceSetting) {
+    if (!setting) {
+      return getTextWithLanguage({
+        vi: "Không rõ",
+        en: "Unknown",
+      });
+    }
+
+    if (setting.is_stop_task) {
+      return getTextWithLanguage({
+        en: "Stop task",
+        vi: "Đã tắt",
+      });
+    }
+
+    if (setting.is_spammed) {
+      return getTextWithLanguage({
+        en: "Spammed",
+        vi: "Bị Spamm",
+      });
+    }
+
+    return getTextWithLanguage({
+      en: "Running",
+      vi: "Đang bật",
+    });
+  }
+
   return (
     <div className="flex-1">
       {/* Header Info */}
@@ -60,11 +147,16 @@ export default function DevicePage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2">
             <Database className="text-blue-500" size={24} />
-            Quản lý thiết bị
+            {getTextWithLanguage({
+              en: "Device management",
+              vi: "Quản lý thiết bị",
+            })}
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
-            Quản lý và thiết lập trạng thái tự động đăng bài cho các tài
-            khoản/cửa sổ Facebook của bạn.
+            {getTextWithLanguage({
+              en: "Manage automatic posting for your Facebook accounts and windows.",
+              vi: "Quản lý và thiết lập trạng thái tự động đăng bài cho các tài khoản/cửa sổ Facebook của bạn.",
+            })}
           </p>
         </div>
       </div>
@@ -73,18 +165,21 @@ export default function DevicePage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-4 shadow-sm flex flex-col">
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            Tổng Thiết Bị
+            {getTextWithLanguage({ en: "Total devices", vi: "Tổng Thiết Bị" })}
           </span>
           <span className="text-2xl font-bold mt-1 text-slate-800 dark:text-slate-100">
-            {1}
+            {devices.length}
           </span>
         </div>
         <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-4 shadow-sm flex flex-col">
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            Đang Chạy Auto
+            {getTextWithLanguage({
+              en: "Automation running",
+              vi: "Đang Chạy Auto",
+            })}
           </span>
           <span className="text-2xl font-bold mt-1 text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-            {1}
+            {0}
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
@@ -93,18 +188,21 @@ export default function DevicePage() {
         </div>
         <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-4 shadow-sm flex flex-col">
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            Bị Spam/Checkpoint
+            {getTextWithLanguage({
+              en: "Spam / Checkpoint",
+              vi: "Bị Spam/Checkpoint",
+            })}
           </span>
           <span className="text-2xl font-bold mt-1 text-amber-600 dark:text-amber-400">
-            {1}
+            {devices.filter((d) => d?.device_setting?.is_spammed).length}
           </span>
         </div>
         <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-4 shadow-sm flex flex-col">
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            Tổng Đã Đăng Hôm Nay
+            {getTextWithLanguage({ en: "Stopped", vi: "Đã Dừng" })}
           </span>
-          <span className="text-2xl font-bold mt-1 text-blue-600 dark:text-blue-400">
-            {1}
+          <span className="text-2xl font-bold mt-1 text-slate-500 dark:text-slate-400">
+            {devices.filter((d) => d?.device_setting?.is_stop_task).length}
           </span>
         </div>
       </div>
@@ -117,10 +215,16 @@ export default function DevicePage() {
             size={48}
           />
           <h3 className="text-lg font-medium text-slate-800 dark:text-zinc-200">
-            Không tìm thấy thiết bị nào
+            {getTextWithLanguage({
+              en: "No devices found",
+              vi: "Không tìm thấy thiết bị nào",
+            })}
           </h3>
           <p className="text-slate-400 dark:text-zinc-500 text-sm mt-1">
-            Không có thiết bị nào phù hợp với bộ lọc tìm kiếm của bạn.
+            {getTextWithLanguage({
+              en: "No devices match your search filters.",
+              vi: "Không có thiết bị nào phù hợp với bộ lọc tìm kiếm của bạn.",
+            })}
           </p>
         </div>
       ) : (
@@ -129,9 +233,9 @@ export default function DevicePage() {
             <div
               key={dev.id}
               className={`bg-white dark:bg-zinc-900 border rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:border-slate-300 dark:hover:border-zinc-700 flex flex-col overflow-hidden ${
-                dev.status === "RUNNING"
+                !dev.device_setting?.is_stop_task
                   ? "border-emerald-200 dark:border-emerald-950/60"
-                  : dev.status === "SPAMMED"
+                  : dev.device_setting?.is_spammed
                     ? "border-rose-200 dark:border-rose-950/60"
                     : "border-slate-200 dark:border-zinc-800"
               }`}
@@ -141,24 +245,27 @@ export default function DevicePage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-semibold text-slate-800 dark:text-zinc-100 truncate text-base">
-                      {dev.device_name || "Thiết bị chưa có tên"}
+                      {dev.device_name ||
+                        getTextWithLanguage({
+                          en: "Unnamed device",
+                          vi: "Thiết bị chưa có tên",
+                        })}
                     </h3>
                     <span
                       className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        dev.status === "RUNNING"
+                        !dev.device_setting?.is_stop_task
                           ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
-                          : dev.status === "SPAMMED"
+                          : dev.device_setting?.is_spammed
                             ? "bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400"
                             : "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-zinc-400"
                       }`}
                     >
-                      {dev.status === "RUNNING"
-                        ? "Đang chạy"
-                        : dev.status === "SPAMMED"
-                          ? "Bị Spam"
-                          : "Đang dừng"}
+                      {getLabelByStatusDevice(dev?.device_setting)}
                     </span>
                   </div>
+                  <p className="text-xs text-slate-400 dark:text-zinc-500 mt-1">
+                    ID: {dev.id}
+                  </p>
                 </div>
               </div>
 
@@ -168,9 +275,17 @@ export default function DevicePage() {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1.5">
                     <span className="text-xs font-medium text-slate-500 dark:text-zinc-400">
-                      Lên lịch:
+                      {getTextWithLanguage({
+                        en: "Schedule:",
+                        vi: "Lên lịch:",
+                      })}
                     </span>
-                    <Switch />
+                    <Switch
+                      checked={!!dev?.device_setting?.is_scheduler}
+                      onCheckedChange={(checked) => {
+                        handleScheduler(dev.id, checked);
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -179,24 +294,43 @@ export default function DevicePage() {
                   <Button
                     size="md"
                     link
-                    to={`/device/${dev.id}`}
-                    text="Cài đặt"
+                    to={`/device/${dev.id}/device-setting`}
+                    text={getTextWithLanguage({
+                      en: "Settings",
+                      vi: "Cài đặt",
+                    })}
                     icon={<Settings2 size={14} />}
                   />
 
                   <Button
                     size="md"
-                    variant={dev.status === "RUNNING" ? "secondary" : "primary"}
+                    variant={
+                      !dev.device_setting?.is_stop_task
+                        ? "secondary"
+                        : "primary"
+                    }
+                    onClick={() => {
+                      handleStopAutomation(
+                        dev.id,
+                        !dev.device_setting?.is_stop_task,
+                      );
+                    }}
                   >
-                    {dev.status === "RUNNING" ? (
+                    {!dev.device_setting?.is_stop_task ? (
                       <>
                         <Square size={12} fill="white" />
-                        Dừng Auto
+                        {getTextWithLanguage({
+                          en: "Stop automation",
+                          vi: "Dừng Tool",
+                        })}
                       </>
                     ) : (
                       <>
                         <Play size={12} fill="white" />
-                        Chạy Auto
+                        {getTextWithLanguage({
+                          en: "Start automation",
+                          vi: "Bật Tool",
+                        })}
                       </>
                     )}
                   </Button>

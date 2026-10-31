@@ -1,3 +1,5 @@
+import { useLanguage } from "@/hooks/useLanguage";
+import getTextWithLanguage from "@/helpers/language";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -24,6 +26,7 @@ export default function DialogManagerContentsDataGroupPost({
   onChangeListContents,
   initContents,
 }: Props) {
+  useLanguage();
   const [listQuill, setListQuill] = useState<ReactQuillNew[]>([
     new ReactQuillNew({ id: genID(), value: "" }),
   ]);
@@ -41,7 +44,10 @@ export default function DialogManagerContentsDataGroupPost({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Manager content of this post</DialogTitle>
+          <DialogTitle>{getTextWithLanguage({
+            en: "Manage post contents",
+            vi: "Quản lý nội dung bài đăng này",
+          })}</DialogTitle>
         </DialogHeader>
         <div className="p-4">
           <div className="flex flex-col gap-3 max-h-80 overflow-y-auto">
@@ -82,7 +88,7 @@ export default function DialogManagerContentsDataGroupPost({
           </div>
           <Button
             size="xs"
-            text="Add new content"
+            text={getTextWithLanguage({ en: "Add new content", vi: "Thêm nội dung mới" })}
             className="mt-2 rounded-sm"
             onClick={() => {
               const newList = [...listQuill];
@@ -100,8 +106,7 @@ export default function DialogManagerContentsDataGroupPost({
               onOpenChange(false);
             }}
           >
-            Done
-          </Button>
+            {getTextWithLanguage({ en: "Done", vi: "Xong" })}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
