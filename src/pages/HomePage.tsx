@@ -6,10 +6,10 @@ import toastHepler from "@/helpers/toast-helper";
 import { Classic } from "@/components/classic";
 
 export default function HomePage() {
-  useLanguage();
-  return (
-    <div className="flex flex-col gap-4">
-      <Button
+	useLanguage();
+	return (
+		<div className="flex flex-col gap-4 w-full h-full">
+			{/* <Button
         text={getTextWithLanguage({ en: "Click", vi: "Nhấn thử" })}
         variant="primary"
         onClick={() => {
@@ -25,8 +25,17 @@ export default function HomePage() {
         en: "Error test very long",
         vi: "Thông báo lỗi thử nghiệm dài",
       })} />
-      <Classic className="size-10" />
-      {/* <DialogLoading /> */}
-    </div>
-  );
+      <Classic className="size-10" /> */}
+			{/* <DialogLoading /> */}
+
+			<div className="w-full h-full flex justify-center items-center text-7xl font-bold">
+				<h2>
+					{getTextWithLanguage({
+						vi: "Xin chào",
+						en: "Welcome",
+					})}
+				</h2>
+			</div>
+		</div>
+	);
 }
