@@ -152,6 +152,37 @@ export default function DevicePage() {
 		});
 	}
 
+	const handleUpdateRemoteDevice = async (deviceId: string, b: boolean) => {
+		try {
+			await deviceService.updateDeviceSetting({
+				key: "is_remote_control",
+				value: b,
+				device_id: deviceId,
+			});
+			setDevices((prev) =>
+				prev.map((dev) =>
+					dev.id === deviceId
+						? {
+								...dev,
+								device_setting: {
+									...dev.device_setting,
+									is_remote_control: b,
+								},
+							}
+						: dev,
+				),
+			);
+		} catch (error) {
+			handleExceptionGlobal(
+				error,
+				getTextWithLanguage({
+					en: "Failed to update device setting",
+					vi: "Lỗi cập nhật thiết bị",
+				}),
+			);
+		}
+	};
+
 	return (
 		<div className="flex-1">
 			{/* Header Info */}
@@ -398,9 +429,9 @@ export default function DevicePage() {
 												: "primary"
 										}
 										onClick={() => {
-											handleStopAutomation(
+											handleUpdateRemoteDevice(
 												dev.id,
-												!dev.device_setting?.is_stop_task,
+												!dev.device_setting.is_remote_control,
 											);
 										}}
 									>
