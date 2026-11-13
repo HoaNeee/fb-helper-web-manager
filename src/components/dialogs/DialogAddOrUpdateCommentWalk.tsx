@@ -278,7 +278,7 @@ export default function DialogAddOrUpdateCommentWalk({
 	return (
 		<>
 			<Dialog open={open} onOpenChange={onOpenChange}>
-				<DialogContent className="min-w-160 max-w-3xl h-[92vh] flex flex-col">
+				<DialogContent className="min-w-0 sm:max-w-3xl h-[92dvh] flex flex-col">
 					{loading && <Loading type="cover" />}
 					<DialogHeader className="pb-3 border-b">
 						<DialogTitle className="text-xl font-bold">
@@ -294,7 +294,7 @@ export default function DialogAddOrUpdateCommentWalk({
 						</DialogTitle>
 					</DialogHeader>
 
-					<div className="overflow-y-auto p-3 flex-1 space-y-4">
+					<div className="overflow-y-auto min-h-0 p-1 sm:p-3 flex-1 space-y-4">
 						<form ref={formRef} className="flex flex-col gap-4">
 							{/* Name field */}
 							<Field>

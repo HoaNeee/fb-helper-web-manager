@@ -28,7 +28,7 @@ export default function HomePage() {
       <Classic className="size-10" /> */}
 			{/* <DialogLoading /> */}
 
-			<div className="w-full h-full flex justify-center items-center text-7xl font-bold">
+			<div className="w-full h-full flex justify-center items-center text-4xl sm:text-7xl font-bold">
 				<h2>
 					{getTextWithLanguage({
 						vi: "Xin chào",

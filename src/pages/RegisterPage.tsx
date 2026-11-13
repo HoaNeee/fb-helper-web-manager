@@ -66,7 +66,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="h-screen w-screen flex justify-center items-center">
+    <div className="min-h-dvh w-full p-4 flex justify-center items-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>

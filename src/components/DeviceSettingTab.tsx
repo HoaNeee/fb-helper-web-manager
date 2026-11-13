@@ -345,7 +345,7 @@ export default function DeviceSettingTab() {
     );
 
   return (
-    <div className="pr-4 w-full h-full overflow-y-auto">
+    <div className="sm:pr-4 w-full min-h-full">
       <div className="mb-4">
         <h2 className="text-xl font-bold">
           {getTextWithLanguage({
@@ -467,7 +467,7 @@ export default function DeviceSettingTab() {
           en: "Quick settings",
         })}
       />
-      <div className="flex flex-col gap-4 mt-6 ml-6">
+      <div className="flex flex-col gap-4 mt-6 ml-0 sm:ml-6">
         <FieldComponent
           id="is_fix_steal_focus"
           label={getTextWithLanguage({
@@ -625,7 +625,7 @@ export default function DeviceSettingTab() {
       />
       <form
         ref={formTimeDelayRef}
-        className="ml-6 mt-4 max-w-86 flex flex-col gap-4"
+        className="ml-0 sm:ml-6 mt-4 max-w-86 flex flex-col gap-4"
       >
         <FieldComponent
           id="time_delay_click_to_post"
@@ -723,7 +723,7 @@ export default function DeviceSettingTab() {
 
           <form
             ref={formCommentWalkConfigRef}
-            className="flex flex-col gap-8 mt-6 ml-6"
+            className="flex flex-col gap-8 mt-6 ml-0 sm:ml-6"
           >
             <FieldComponent
               id="is_interact_before_comment_walk"
@@ -885,7 +885,7 @@ export default function DeviceSettingTab() {
               }}
             />
 
-            <div className="flex gap-8 items-center">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 sm:items-center">
               <div className="max-w-60 w-full">
                 <Label className="font-normal my-2">
                   {getTextWithLanguage({
@@ -1137,7 +1137,7 @@ export default function DeviceSettingTab() {
           />
           <form
             ref={formTimeDelayCommentWalkConfigRef}
-            className="ml-6 mt-4 max-w-86 flex flex-col gap-4"
+            className="ml-0 sm:ml-6 mt-4 max-w-86 flex flex-col gap-4"
           >
             <FieldComponent
               id="time-delay-fill-content-comment-walk-min"

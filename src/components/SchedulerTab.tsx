@@ -338,7 +338,7 @@ export default function SchedulerTab() {
   return (
     <>
       {actionLoading && <Loading type="dialog" />}
-      <div className="w-full h-full p-4 flex flex-col gap-3">
+      <div className="w-full min-h-full p-0 sm:p-4 flex flex-col gap-3">
         <h2 className="font-medium text-lg">
           {getTextWithLanguage({
             en: "Scheduler for device",
@@ -355,7 +355,7 @@ export default function SchedulerTab() {
             onClick={() => setOpenDialogViewScheduler(true)}
           />
         </div>
-        <div className="w-[320px]">
+        <div className="w-full max-w-[320px]">
           <Label className="font-normal my-2">
             {getTextWithLanguage({
               en: "Select scheduler type",

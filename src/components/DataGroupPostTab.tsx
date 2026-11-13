@@ -239,7 +239,7 @@ export default function DataGroupPostTab() {
 
   return (
     <>
-      <div className="flex flex-col py-4 px-6 gap-3 overflow-hidden h-full">
+      <div className="flex flex-col py-2 sm:py-4 sm:px-6 gap-3 overflow-hidden min-h-0 h-full">
         {actionLoading && <Loading type="dialog" />}
         <div className="mb-4">
           <h2 className="text-xl font-bold">
@@ -249,7 +249,7 @@ export default function DataGroupPostTab() {
             })}
           </h2>
         </div>
-        <div className="mb-3 flex items-center gap-3">
+        <div className="mb-3 flex flex-wrap items-center gap-3">
           <Button
             size="md"
             type="submit"
@@ -306,11 +306,11 @@ export default function DataGroupPostTab() {
             })}
           </Button>
         </div>
-        <div className="flex flex-col gap-4 overflow-y-auto h-full">
+        <div className="flex flex-col gap-4 overflow-y-auto min-h-0 flex-1">
           {dataGroupPosts.length ? (
             dataGroupPosts.map((dgp) => {
               return (
-                <div key={dgp.id} className="flex items-center gap-2">
+                <div key={dgp.id} className="flex flex-wrap items-center gap-2">
                   <Field orientation="horizontal" className="w-auto">
                     <Checkbox
                       className={"size-4.5"}

@@ -242,7 +242,7 @@ export default function CommentWalkTab() {
 
   return (
     <>
-      <div className="flex flex-col py-4 px-6 gap-3 overflow-hidden h-full">
+      <div className="flex flex-col py-2 sm:py-4 sm:px-6 gap-3 overflow-hidden min-h-0 h-full">
         {actionLoading && <Loading type="dialog" />}
         <div className="mb-4">
           <h2 className="text-xl font-bold">
@@ -252,7 +252,7 @@ export default function CommentWalkTab() {
             })}
           </h2>
         </div>
-        <div className="mb-3 flex items-center gap-3">
+        <div className="mb-3 flex flex-wrap items-center gap-3">
           <Button
             size="md"
             type="submit"
@@ -304,13 +304,13 @@ export default function CommentWalkTab() {
             })}
           </Button>
         </div>
-        <div className="flex flex-col gap-2 overflow-y-auto h-full">
+        <div className="flex flex-col gap-2 overflow-y-auto min-h-0 flex-1">
           {listCommentWalk.length ? (
             listCommentWalk.map((cw) => {
               return (
                 <div
                   key={cw.id}
-                  className="flex items-center gap-3 px-4 py-2.5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg hover:shadow-sm transition-all duration-200"
+                  className="flex flex-wrap items-center gap-3 px-4 py-2.5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg hover:shadow-sm transition-all duration-200"
                 >
                   <Checkbox
                     className="size-4 shrink-0"

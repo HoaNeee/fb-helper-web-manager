@@ -230,7 +230,7 @@ export default function DataGroupPostPage() {
             })}
           </p>
         </div>
-        <div className="flex flex-col py-2 gap-3 overflow-hidden flex-1">
+        <div className="flex flex-col py-2 gap-3 overflow-hidden min-h-0 flex-1">
           <div className="mb-3 flex items-center gap-3 flex-wrap">
             <Button
               size="md"
@@ -277,13 +277,13 @@ export default function DataGroupPostPage() {
               })}
             />
           </div>
-          <div className="flex flex-col gap-4 overflow-y-auto h-full pr-2">
+          <div className="flex flex-col gap-4 overflow-y-auto min-h-0 flex-1 pr-2">
             {dataGroupPosts.length ? (
               dataGroupPosts.map((dgp) => {
                 return (
                   <div
                     key={dgp.id}
-                    className="flex items-center justify-between gap-3 px-4 py-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 border-l-4 border-l-(--bg-btn-primary) rounded-lg hover:shadow-sm hover:border-slate-300 dark:hover:border-zinc-700 transition-all duration-200"
+                    className="flex flex-col items-stretch sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 border-l-4 border-l-(--bg-btn-primary) rounded-lg hover:shadow-sm hover:border-slate-300 dark:hover:border-zinc-700 transition-all duration-200"
                   >
                     <p className="text-sm font-medium text-slate-800 dark:text-zinc-100 truncate flex-1">
                       {dgp.name ||
@@ -293,7 +293,7 @@ export default function DataGroupPostPage() {
                           vi: "Không có tên",
                         })}
                     </p>
-                    <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                       <Button
                         variant="primary"
                         size="xs"

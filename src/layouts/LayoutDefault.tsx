@@ -41,7 +41,7 @@ export default function LayoutDefault() {
       <Header isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       <div className="main-content">
         <Sidebar />
-        <div className="flex-1 px-6 py-4">
+        <div className="page-content">
           <Outlet />
         </div>
       </div>

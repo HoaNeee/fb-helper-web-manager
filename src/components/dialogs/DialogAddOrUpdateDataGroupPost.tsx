@@ -208,7 +208,7 @@ export default function DialogAddOrUpdateDataGroupPost({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className={"min-w-130 h-[93vh] flex flex-col"}>
+        <DialogContent className={"min-w-0 sm:max-w-xl h-[93dvh] flex flex-col"}>
           {loading && <Loading type="cover" />}
           <DialogHeader>
             <DialogTitle>
@@ -218,7 +218,7 @@ export default function DialogAddOrUpdateDataGroupPost({
               })}
             </DialogTitle>
           </DialogHeader>
-          <div className="overflow-y-auto p-2 flex-1">
+          <div className="overflow-y-auto min-h-0 p-2 flex-1">
             <form ref={formRef} className="flex flex-col gap-4">
               <Field>
                 <FieldLabel htmlFor="data-group-post-title">

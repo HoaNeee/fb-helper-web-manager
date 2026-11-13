@@ -260,7 +260,7 @@ export default function DevicePage() {
 				</h3>
 			</div>
 			<div className="mb-6 mt-3 flex flex-col gap-4">
-				<div className="flex gap-2 items-center">
+				<div className="flex flex-wrap gap-2 items-center">
 					<Button
 						onClick={() => {
 							setIsStopOrEnableAllDevices(false);
@@ -289,7 +289,7 @@ export default function DevicePage() {
 					</Button>
 				</div>
 
-				<div className="flex gap-2 items-center">
+				<div className="flex flex-wrap gap-2 items-center">
 					<Button
 						onClick={() => {
 							setIsRemoteAllDevices(true);
@@ -347,7 +347,7 @@ export default function DevicePage() {
 					</p>
 				</div>
 			) : (
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto">
+				<div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
 					{devices.map((dev) => (
 						<div
 							key={dev.id}
@@ -382,14 +382,14 @@ export default function DevicePage() {
 											{getLabelByStatusDevice(dev?.device_setting)}
 										</span>
 									</div>
-									<p className="text-xs text-slate-400 dark:text-zinc-500 mt-1">
+									<p className="text-xs text-slate-400 dark:text-zinc-500 mt-1 break-all">
 										ID: {dev.id}
 									</p>
 								</div>
 							</div>
 
 							{/* Card Footer: Quick Toggles and Navigation */}
-							<div className="px-5 py-4 bg-slate-50 dark:bg-zinc-950/20 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between">
+							<div className="px-5 py-4 bg-slate-50 dark:bg-zinc-950/20 border-t border-slate-100 dark:border-zinc-800/80 flex flex-wrap items-center justify-between gap-3">
 								{/* Toggles */}
 								<div className="flex items-center gap-4">
 									<div className="flex items-center gap-1.5">
@@ -409,7 +409,7 @@ export default function DevicePage() {
 								</div>
 
 								{/* Actions */}
-								<div className="flex items-center gap-2">
+								<div className="flex flex-wrap items-center gap-2">
 									<Button
 										size="sm"
 										link

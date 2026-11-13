@@ -231,7 +231,7 @@ export default function CommentWalkPage() {
             })}
           </p>
         </div>
-        <div className="flex flex-col py-2 gap-3 overflow-hidden flex-1">
+        <div className="flex flex-col py-2 gap-3 overflow-hidden min-h-0 flex-1">
           <div className="mb-3 flex items-center gap-3 flex-wrap">
             <Button
               size="md"
@@ -279,7 +279,7 @@ export default function CommentWalkPage() {
             />
           </div>
 
-          <div className="flex flex-col gap-4 overflow-y-auto flex-1 pr-2">
+          <div className="flex flex-col gap-4 overflow-y-auto min-h-0 flex-1 pr-2">
             {listCommentWalk.length ? (
               listCommentWalk.map((cm) => {
                 return (
@@ -305,7 +305,7 @@ export default function CommentWalkPage() {
                         </p>
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                       <Button
                         variant="primary"
                         size="xs"

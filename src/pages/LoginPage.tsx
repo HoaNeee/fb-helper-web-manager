@@ -53,7 +53,7 @@ export default function LoginPage() {
 	};
 
 	return (
-		<div className="h-screen w-screen flex justify-center items-center">
+		<div className="min-h-dvh w-full p-4 flex justify-center items-center">
 			{authState.loading && <Loading type="dialog" />}
 			<form
 				ref={formRef}

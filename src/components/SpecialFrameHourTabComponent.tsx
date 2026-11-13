@@ -59,7 +59,7 @@ function SpecialFrameHourItem({
           ) : null}
           <Label className="flex flex-col items-start">
             <div className="flex flex-col gap-1 mb-1 font-normal">
-              <div className="flex gap-4 items-center text-sm">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 items-center text-sm">
                 <p>
                   {getTextWithLanguage({
                     en: "Start time:",
@@ -95,7 +95,7 @@ function SpecialFrameHourItem({
           </Label>
         </div>
         <div
-          className={`flex gap-2 items-center ${mode === "device" && "ml-8"}`}
+          className={`flex flex-wrap gap-2 items-center ${mode === "device" && "ml-8"}`}
         >
           <Button
             text={getTextWithLanguage({ en: "Edit", vi: "Chỉnh sửa" })}
@@ -134,7 +134,7 @@ function SpecialFrameHourItem({
           />
         </div>
         {mode === "page" && (
-          <div className="absolute top-2 right-2 flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <DialogConfirm
               type="trigger"
               title={getTextWithLanguage({
@@ -462,8 +462,8 @@ export default function SpecialFrameHourTabComponent({ mode }: Props) {
   return (
     <>
       {actionLoading && <Loading type="dialog" />}
-      <div className="w-full h-full py-3 px-5 flex flex-col">
-        <div className="flex items-center gap-2">
+      <div className="w-full min-h-0 h-full py-3 sm:px-5 flex flex-col">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             text={getTextWithLanguage({
               en: "Add frame hour",
@@ -518,7 +518,7 @@ export default function SpecialFrameHourTabComponent({ mode }: Props) {
             }}
           />
         </div>
-        <div className="flex flex-col gap-4 mt-4 flex-1 overflow-y-scroll">
+        <div className="flex flex-col gap-4 mt-4 flex-1 min-h-0 overflow-y-auto">
           {specialFrameHours.length ? (
             specialFrameHours.map((item, idx) => (
               <SpecialFrameHourItem

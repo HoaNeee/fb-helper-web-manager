@@ -129,7 +129,7 @@ const Sidebar: React.FC = () => {
       <nav className="sidebar-nav">
         {deviceId ? (
           <>
-            <div className="mb-2 text-sm text-gray-500 px-2 flex gap-1">
+            <div className="sidebar-device-label mb-2 text-sm text-gray-500 px-2 flex gap-1">
               {getTextWithLanguage({ en: "Device:", vi: "Thiết bị:" })}{" "}
               <span className="font-semibold truncate block text-gray-600 dark:text-gray-300">
                 {deviceId}
@@ -143,7 +143,7 @@ const Sidebar: React.FC = () => {
                 vi: "Quay lại danh sách thiết bị",
               })}</span>
             </Link>
-            <div className="my-1 border-t border-gray-200 dark:border-zinc-700" />
+            <div className="sidebar-divider my-1 border-t border-gray-200 dark:border-zinc-700" />
             {navDeviceDetailItems.map((item) => {
               const isLocked = item.locked;
               if (isLocked) return null;

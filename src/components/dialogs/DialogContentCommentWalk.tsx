@@ -84,13 +84,13 @@ export default function DialogContentCommentWalk({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="min-w-120 max-w-xl max-h-[85vh] flex flex-col">
+      <DialogContent className="min-w-0 sm:max-w-xl max-h-[85dvh] flex flex-col">
         <DialogHeader className="pb-2 border-b">
           <DialogTitle className="text-lg font-semibold">
             {getTextWithLanguage({ en: `Manage comment contents (${listComments.length})`, vi: `Quản lý nội dung bình luận (${listComments.length})` })}</DialogTitle>
         </DialogHeader>
 
-        <div className="p-4 flex-1 overflow-y-auto space-y-4">
+        <div className="p-1 sm:p-4 min-h-0 flex-1 overflow-y-auto space-y-4">
           <div className="flex flex-col gap-3">
             {listComments.map((comment, idx) => {
               return (

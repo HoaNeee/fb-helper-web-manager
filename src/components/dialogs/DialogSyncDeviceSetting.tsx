@@ -62,7 +62,7 @@ export default function DialogSyncDevieSetting({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className={
-          "max-w-lg! h-full w-full max-h-[93vh] flex flex-col overflow-hidden"
+          "sm:max-w-lg h-full w-full max-h-[93dvh] flex flex-col overflow-hidden"
         }
       >
         <DialogHeader>
@@ -73,7 +73,7 @@ export default function DialogSyncDevieSetting({
             })}
           </DialogTitle>
         </DialogHeader>
-        <div className="flex-1 w-full overflow-y-auto h-full flex flex-col gap-4">
+        <div className="flex-1 min-h-0 w-full overflow-y-auto flex flex-col gap-4">
           {loading ? (
             <Loading />
           ) : listDevice.length ? (

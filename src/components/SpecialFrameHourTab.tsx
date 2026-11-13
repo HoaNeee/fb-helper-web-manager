@@ -5,7 +5,7 @@ import SpecialFrameHourTabComponent from "./SpecialFrameHourTabComponent";
 export default function SpecialFrameHourTab() {
   useLanguage();
   return (
-    <div className="w-full h-full py-3 px-5 flex flex-col gap-2">
+    <div className="w-full min-h-0 h-full py-0 sm:py-3 sm:px-5 flex flex-col gap-2">
       <h1 className="text-xl font-semibold">{getTextWithLanguage({
         en: "Special Frame Hours",
         vi: "Khung giờ đặc biệt",
